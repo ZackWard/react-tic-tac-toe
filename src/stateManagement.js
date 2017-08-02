@@ -8,7 +8,8 @@ const defaultState = {
     playerMark: "X",
     board: [null, null, null, null, null, null, null, null, null],
     gameOver: false,
-    winner: false
+    winner: false,
+    winningSpaces: null
 };
 
 const reducer = (state = defaultState, action) => {
@@ -27,11 +28,15 @@ const reducer = (state = defaultState, action) => {
 
         case "GAME_OVER": 
             newState.gameOver = true;
+            newState.winner = action.winner;
+            newState.winningSpaces = action.winningSpaces;
             break;
         
         case "RESET_BOARD": 
             newState.board = [null, null, null, null, null, null, null, null, null];
             newState.gameOver = false;
+            newState.winner = false;
+            newState.winningSpaces = null;
             break;
     }
 

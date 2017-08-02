@@ -69,15 +69,18 @@ export default class TTTEngine {
     
     // Check to see if there is a winner
     let winner = undefined;
+    let winningSpaces = undefined;
+
     this.combos.map(function (combo) {
       let a = combo[0];
       let b = combo[1];
       let c = combo[2];
       if (board[a] !== null && board[a] === board[b] && board[b] === board[c]) {
         winner = board[a];
+        winningSpaces = [a, b, c];
       }
     });
-    if (winner !== null) return winner;
+    if (winner !== null) return {winner, winningSpaces};
     
     // Check to see if the board is full
     let openSpaces = 0;

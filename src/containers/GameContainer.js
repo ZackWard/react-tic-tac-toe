@@ -5,7 +5,8 @@ import {handlePlayerMove, changePlayerMark, resetBoard} from "../actionCreators.
 const mapStateToProps = (state) => {
     return {
         playerMark: state.playerMark,
-        board: state.board
+        board: state.board,
+        winningSpaces: state.winningSpaces
     };
 };
 

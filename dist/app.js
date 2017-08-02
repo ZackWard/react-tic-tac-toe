@@ -11392,7 +11392,7 @@ var _stateManagement = __webpack_require__(225);
 
 var _stateManagement2 = _interopRequireDefault(_stateManagement);
 
-var _GameContainer = __webpack_require__(228);
+var _GameContainer = __webpack_require__(227);
 
 var _GameContainer2 = _interopRequireDefault(_GameContainer);
 
@@ -24970,7 +24970,8 @@ var defaultState = {
     playerMark: "X",
     board: [null, null, null, null, null, null, null, null, null],
     gameOver: false,
-    winner: false
+    winner: false,
+    winningSpaces: null
 };
 
 var reducer = function reducer() {
@@ -24992,11 +24993,15 @@ var reducer = function reducer() {
 
         case "GAME_OVER":
             newState.gameOver = true;
+            newState.winner = action.winner;
+            newState.winningSpaces = action.winningSpaces;
             break;
 
         case "RESET_BOARD":
             newState.board = [null, null, null, null, null, null, null, null, null];
             newState.gameOver = false;
+            newState.winner = false;
+            newState.winningSpaces = null;
             break;
     }
 
@@ -25036,6 +25041,516 @@ exports['default'] = thunk;
 
 /***/ }),
 /* 227 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _reactRedux = __webpack_require__(85);
+
+var _TicTacToe = __webpack_require__(228);
+
+var _TicTacToe2 = _interopRequireDefault(_TicTacToe);
+
+var _actionCreators = __webpack_require__(232);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mapStateToProps = function mapStateToProps(state) {
+    return {
+        playerMark: state.playerMark,
+        board: state.board,
+        winningSpaces: state.winningSpaces
+    };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+    return {
+        changePlayerMark: function changePlayerMark(mark) {
+            // If the player is changing the mark that they're using, we know we need to reset the board (to prevent cheating)
+            dispatch((0, _actionCreators.resetBoard)());
+            dispatch((0, _actionCreators.changePlayerMark)(mark));
+        },
+        makePlay: function makePlay(position, player) {
+            dispatch((0, _actionCreators.handlePlayerMove)(position, player));
+        },
+        resetBoard: function resetBoard() {
+            dispatch((0, _actionCreators.resetBoard)());
+        }
+    };
+};
+
+var GameContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_TicTacToe2.default);
+exports.default = GameContainer;
+
+/***/ }),
+/* 228 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = TicTacToe;
+
+var _react = __webpack_require__(14);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Nav = __webpack_require__(229);
+
+var _Nav2 = _interopRequireDefault(_Nav);
+
+var _DialogBox = __webpack_require__(230);
+
+var _DialogBox2 = _interopRequireDefault(_DialogBox);
+
+var _TTTCell = __webpack_require__(231);
+
+var _TTTCell2 = _interopRequireDefault(_TTTCell);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function TicTacToe(props) {
+
+    var clickCell = function clickCell(position) {
+        props.makePlay(position, props.playerMark);
+    };
+
+    return _react2.default.createElement(
+        "div",
+        null,
+        _react2.default.createElement(_Nav2.default, null),
+        _react2.default.createElement(_DialogBox2.default, { chooseMark: props.changePlayerMark }),
+        _react2.default.createElement(
+            "div",
+            { className: "board" },
+            _react2.default.createElement(
+                "table",
+                null,
+                _react2.default.createElement(
+                    "tbody",
+                    null,
+                    _react2.default.createElement(
+                        "tr",
+                        null,
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, position: 0, mark: props.board[0], clickHandler: clickCell }),
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, className: "middle", position: 1, mark: props.board[1], clickHandler: clickCell }),
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, position: 2, mark: props.board[2], clickHandler: clickCell })
+                    ),
+                    _react2.default.createElement(
+                        "tr",
+                        { className: "middle" },
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, position: 3, mark: props.board[3], clickHandler: clickCell }),
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, className: "middle", position: 4, mark: props.board[4], clickHandler: clickCell }),
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, position: 5, mark: props.board[5], clickHandler: clickCell })
+                    ),
+                    _react2.default.createElement(
+                        "tr",
+                        null,
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, position: 6, mark: props.board[6], clickHandler: clickCell }),
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, className: "middle", position: 7, mark: props.board[7], clickHandler: clickCell }),
+                        _react2.default.createElement(_TTTCell2.default, { winningSpaces: props.winningSpaces, position: 8, mark: props.board[8], clickHandler: clickCell })
+                    )
+                )
+            ),
+            _react2.default.createElement(
+                "div",
+                { id: "options" },
+                _react2.default.createElement(
+                    "button",
+                    { "data-toggle": "modal", "data-target": "#dialog", onClick: props.resetBoard, className: "btn btn-default" },
+                    "Reset"
+                )
+            )
+        )
+    );
+};
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(14);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Nav = function (_React$Component) {
+    _inherits(Nav, _React$Component);
+
+    function Nav() {
+        _classCallCheck(this, Nav);
+
+        return _possibleConstructorReturn(this, (Nav.__proto__ || Object.getPrototypeOf(Nav)).apply(this, arguments));
+    }
+
+    _createClass(Nav, [{
+        key: "render",
+        value: function render() {
+            return _react2.default.createElement(
+                "nav",
+                { className: "navbar navbar-default navbar-fixed-top" },
+                _react2.default.createElement(
+                    "div",
+                    { className: "container" },
+                    _react2.default.createElement(
+                        "div",
+                        { className: "navbar-header" },
+                        _react2.default.createElement(
+                            "button",
+                            { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#main-navbar", "aria-expanded": "false" },
+                            _react2.default.createElement(
+                                "span",
+                                { className: "sr-only" },
+                                "Toggle navigation"
+                            ),
+                            _react2.default.createElement("span", { className: "icon-bar" }),
+                            _react2.default.createElement("span", { className: "icon-bar" }),
+                            _react2.default.createElement("span", { className: "icon-bar" })
+                        ),
+                        _react2.default.createElement(
+                            "a",
+                            { className: "navbar-brand", href: "#" },
+                            "Tic Tac Toe"
+                        )
+                    ),
+                    _react2.default.createElement(
+                        "div",
+                        { className: "collapse navbar-collapse", id: "main-navbar" },
+                        _react2.default.createElement(
+                            "ul",
+                            { className: "nav navbar-nav navbar-right" },
+                            _react2.default.createElement(
+                                "li",
+                                null,
+                                _react2.default.createElement(
+                                    "a",
+                                    { href: "http://www.zackward.net" },
+                                    "Home"
+                                )
+                            ),
+                            _react2.default.createElement(
+                                "li",
+                                null,
+                                _react2.default.createElement(
+                                    "a",
+                                    { href: "https://github.com/ZackWard/zackward.github.io/tree/master/projects/tic-tac-toe" },
+                                    "Source ",
+                                    _react2.default.createElement("i", { className: "fa fa-github", "aria-hidden": "true" })
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Nav;
+}(_react2.default.Component);
+
+module.exports = Nav;
+
+/***/ }),
+/* 230 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(14);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DialogBox = function (_React$Component) {
+    _inherits(DialogBox, _React$Component);
+
+    function DialogBox(props) {
+        _classCallCheck(this, DialogBox);
+
+        return _possibleConstructorReturn(this, (DialogBox.__proto__ || Object.getPrototypeOf(DialogBox)).call(this, props));
+    }
+
+    // Ok, so this is kind of sketchy, but for right now we're going to let Bootstrap+jQuery continue to manage the modal DOM.
+    // Another option, the "React way", would be to accept a "visible" prop, and then return the modal or null based on that.
+    // However, I want to get as close as possible to the original look and feel, so I'll leave it as-is for now.
+
+    _createClass(DialogBox, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var chooseX = function chooseX() {
+                _this2.props.chooseMark('X');
+            };
+            var chooseO = function chooseO() {
+                _this2.props.chooseMark('O');
+            };
+
+            return _react2.default.createElement(
+                'div',
+                { id: 'dialog', className: 'modal fade', tabIndex: '-1', role: 'dialog' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'modal-dialog' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'modal-content' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'modal-header' },
+                            _react2.default.createElement(
+                                'button',
+                                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
+                                _react2.default.createElement(
+                                    'span',
+                                    { 'aria-hidden': 'true' },
+                                    '\xD7'
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'h4',
+                                { className: 'modal-title' },
+                                'Tic Tac Toe'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'modal-body' },
+                            _react2.default.createElement(
+                                'p',
+                                null,
+                                'Please choose your side.'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'modal-footer' },
+                            _react2.default.createElement(
+                                'button',
+                                { onClick: chooseX, id: 'playerX', type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+                                _react2.default.createElement('i', { className: 'fa fa-times fa-3x', 'aria-hidden': 'true' })
+                            ),
+                            _react2.default.createElement(
+                                'button',
+                                { onClick: chooseO, id: 'playerO', type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
+                                _react2.default.createElement('i', { className: 'fa fa-circle-o fa-3x', 'aria-hidden': 'true' })
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return DialogBox;
+}(_react2.default.Component);
+
+module.exports = DialogBox;
+
+/***/ }),
+/* 231 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _react = __webpack_require__(14);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var TTTCell = function TTTCell(props) {
+
+    var markup = "";
+    if (String(props.mark).toLowerCase() == "x") {
+        markup = _react2.default.createElement(
+            "h1",
+            null,
+            _react2.default.createElement("i", { className: "fa fa-times", "aria-hidden": "true" })
+        );
+    } else if (String(props.mark).toLowerCase() == "o") {
+        markup = _react2.default.createElement(
+            "h1",
+            null,
+            _react2.default.createElement("i", { className: "fa fa-circle-o", "aria-hidden": "true" })
+        );
+    }
+
+    var classList = props.className;
+    if (Array.isArray(props.winningSpaces) && props.winningSpaces.indexOf(props.position) != -1) {
+        classList += " winner";
+    }
+
+    return _react2.default.createElement(
+        "td",
+        { className: classList, onClick: function onClick() {
+                props.clickHandler(props.position);
+            } },
+        markup
+    );
+};
+
+module.exports = TTTCell;
+
+/***/ }),
+/* 232 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.handlePlayerMove = exports.gameOver = exports.makePlay = exports.changePlayerMark = exports.resetBoard = undefined;
+
+var _TTTEngine = __webpack_require__(233);
+
+var _TTTEngine2 = _interopRequireDefault(_TTTEngine);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var gameEngine = new _TTTEngine2.default();
+
+// Simple action creators
+
+// We'll need our game engine here, since this is where we're handling game logic
+var resetBoard = exports.resetBoard = function resetBoard() {
+    return {
+        type: "RESET_BOARD"
+    };
+};
+
+var changePlayerMark = exports.changePlayerMark = function changePlayerMark(player) {
+    return {
+        type: "CHANGE_PLAYER_MARK",
+        playerMark: player
+    };
+};
+
+var makePlay = exports.makePlay = function makePlay(position, player) {
+    return {
+        type: "MAKE_PLAY",
+        position: position,
+        player: player
+    };
+};
+
+var gameOver = exports.gameOver = function gameOver(_ref) {
+    var winner = _ref.winner,
+        winningSpaces = _ref.winningSpaces;
+
+    return {
+        type: "GAME_OVER",
+        winner: winner,
+        winningSpaces: winningSpaces
+    };
+};
+
+// The main action creator is where we'll handle our game logic. That way the reducer stays pure.
+var handlePlayerMove = exports.handlePlayerMove = function handlePlayerMove(position) {
+
+    // Ok, so here is the pseudo code
+    // First, handle the players move
+    // If it is successful (the move was a valid one) check to see if the player won
+    // If the player didn't win, have the computer choose a move
+    // Check to see if the computer won
+    // If the computer didn't win, allow the player to move again
+
+    // We'll do this with a thunk!
+    return function (dispatch, getState) {
+
+        // Make a copy of the current Redux state. 
+        // We'll have to keep this in sync with our dispatches. This is a little icky, but I'll hold my nose and do it for now.
+        // It helps keep the reducer pure.
+        var localState = JSON.parse(JSON.stringify(getState()));
+
+        // TODO: Move this somewhere better. We shouldn't need to initialize this every move
+        gameEngine.setPlayer(localState.playerMark == "X" ? "O" : "X");
+
+        // Return early if the game is already over
+        if (localState.gameOver) {
+            console.log("Nice try, but the game is over!");
+            return false;
+        }
+
+        // Return early if the position that the player is attempting to play on is already taken
+        if (localState.board[position] != null) {
+            console.log("Sorry, that position has already been played on.");
+            return false;
+        }
+
+        // This seems to be a valid move. Dispatch an update to the Redux state, and update our local state too.
+        dispatch(makePlay(position, localState.playerMark));
+        localState.board[position] = localState.playerMark;
+
+        // Check to see if the player won with this move
+        // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
+        if (gameEngine.checkWinner(localState.board).winner == localState.playerMark) {
+            console.log("The player just won! That should be impossible!");
+            dispatch(gameOver(gameEngine.checkWinner(localState.board)));
+            localState.gameOver = true;
+            localState.winner = localState.playerMark;
+        }
+
+        // TODO: Check to see if the player made a foolish move and respond "appropriately"
+
+        // Find the computers mark
+        var computerMark = localState.playerMark == "X" ? "O" : "X";
+
+        // Ok, here is the magic: The player has just made a move, but didn't win the game. Now we need to make a move.
+        var computerMove = gameEngine.decideMove(localState.board);
+        console.log("Computer move: " + computerMove);
+
+        // Dispatch the computers move, and update our local state (ick)
+        dispatch(makePlay(computerMove, computerMark));
+        localState.board[computerMove] = computerMark;
+
+        // Check to see if the computer won with this move
+        // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
+        if (gameEngine.checkWinner(localState.board).winner == computerMark) {
+            console.log("The computer won! I'm shocked!");
+            dispatch(gameOver(gameEngine.checkWinner(localState.board)));
+            localState.gameOver = true;
+            localState.winner = computerMark;
+            // Dispatch event
+        }
+    };
+};
+
+/***/ }),
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25121,15 +25636,18 @@ var TTTEngine = function () {
 
       // Check to see if there is a winner
       var winner = undefined;
+      var winningSpaces = undefined;
+
       this.combos.map(function (combo) {
         var a = combo[0];
         var b = combo[1];
         var c = combo[2];
         if (board[a] !== null && board[a] === board[b] && board[b] === board[c]) {
           winner = board[a];
+          winningSpaces = [a, b, c];
         }
       });
-      if (winner !== null) return winner;
+      if (winner !== null) return { winner: winner, winningSpaces: winningSpaces };
 
       // Check to see if the board is full
       var openSpaces = 0;
@@ -25319,505 +25837,6 @@ var TTTEngine = function () {
 
 exports.default = TTTEngine;
 ;
-
-/***/ }),
-/* 228 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _reactRedux = __webpack_require__(85);
-
-var _TicTacToe = __webpack_require__(229);
-
-var _TicTacToe2 = _interopRequireDefault(_TicTacToe);
-
-var _actionCreators = __webpack_require__(233);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var mapStateToProps = function mapStateToProps(state) {
-    return {
-        playerMark: state.playerMark,
-        board: state.board
-    };
-};
-
-var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-    return {
-        changePlayerMark: function changePlayerMark(mark) {
-            // If the player is changing the mark that they're using, we know we need to reset the board (to prevent cheating)
-            dispatch((0, _actionCreators.resetBoard)());
-            dispatch((0, _actionCreators.changePlayerMark)(mark));
-        },
-        makePlay: function makePlay(position, player) {
-            dispatch((0, _actionCreators.handlePlayerMove)(position, player));
-        },
-        resetBoard: function resetBoard() {
-            dispatch((0, _actionCreators.resetBoard)());
-        }
-    };
-};
-
-var GameContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_TicTacToe2.default);
-exports.default = GameContainer;
-
-/***/ }),
-/* 229 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = TicTacToe;
-
-var _react = __webpack_require__(14);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Nav = __webpack_require__(230);
-
-var _Nav2 = _interopRequireDefault(_Nav);
-
-var _DialogBox = __webpack_require__(231);
-
-var _DialogBox2 = _interopRequireDefault(_DialogBox);
-
-var _TTTCell = __webpack_require__(232);
-
-var _TTTCell2 = _interopRequireDefault(_TTTCell);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function TicTacToe(props) {
-
-    var clickCell = function clickCell(position) {
-        props.makePlay(position, props.playerMark);
-    };
-
-    return _react2.default.createElement(
-        "div",
-        null,
-        _react2.default.createElement(_Nav2.default, null),
-        _react2.default.createElement(_DialogBox2.default, { chooseMark: props.changePlayerMark }),
-        _react2.default.createElement(
-            "div",
-            { className: "board" },
-            _react2.default.createElement(
-                "table",
-                null,
-                _react2.default.createElement(
-                    "tbody",
-                    null,
-                    _react2.default.createElement(
-                        "tr",
-                        null,
-                        _react2.default.createElement(_TTTCell2.default, { position: 0, mark: props.board[0], clickHandler: clickCell }),
-                        _react2.default.createElement(_TTTCell2.default, { className: "middle", position: 1, mark: props.board[1], clickHandler: clickCell }),
-                        _react2.default.createElement(_TTTCell2.default, { position: 2, mark: props.board[2], clickHandler: clickCell })
-                    ),
-                    _react2.default.createElement(
-                        "tr",
-                        { className: "middle" },
-                        _react2.default.createElement(_TTTCell2.default, { position: 3, mark: props.board[3], clickHandler: clickCell }),
-                        _react2.default.createElement(_TTTCell2.default, { className: "middle", position: 4, mark: props.board[4], clickHandler: clickCell }),
-                        _react2.default.createElement(_TTTCell2.default, { position: 5, mark: props.board[5], clickHandler: clickCell })
-                    ),
-                    _react2.default.createElement(
-                        "tr",
-                        null,
-                        _react2.default.createElement(_TTTCell2.default, { position: 6, mark: props.board[6], clickHandler: clickCell }),
-                        _react2.default.createElement(_TTTCell2.default, { className: "middle", position: 7, mark: props.board[7], clickHandler: clickCell }),
-                        _react2.default.createElement(_TTTCell2.default, { position: 8, mark: props.board[8], clickHandler: clickCell })
-                    )
-                )
-            ),
-            _react2.default.createElement(
-                "div",
-                { id: "options" },
-                _react2.default.createElement(
-                    "button",
-                    { "data-toggle": "modal", "data-target": "#dialog", onClick: props.resetBoard, className: "btn btn-default" },
-                    "Reset"
-                )
-            )
-        )
-    );
-};
-
-/***/ }),
-/* 230 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(14);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Nav = function (_React$Component) {
-    _inherits(Nav, _React$Component);
-
-    function Nav() {
-        _classCallCheck(this, Nav);
-
-        return _possibleConstructorReturn(this, (Nav.__proto__ || Object.getPrototypeOf(Nav)).apply(this, arguments));
-    }
-
-    _createClass(Nav, [{
-        key: "render",
-        value: function render() {
-            return _react2.default.createElement(
-                "nav",
-                { className: "navbar navbar-default navbar-fixed-top" },
-                _react2.default.createElement(
-                    "div",
-                    { className: "container" },
-                    _react2.default.createElement(
-                        "div",
-                        { className: "navbar-header" },
-                        _react2.default.createElement(
-                            "button",
-                            { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#main-navbar", "aria-expanded": "false" },
-                            _react2.default.createElement(
-                                "span",
-                                { className: "sr-only" },
-                                "Toggle navigation"
-                            ),
-                            _react2.default.createElement("span", { className: "icon-bar" }),
-                            _react2.default.createElement("span", { className: "icon-bar" }),
-                            _react2.default.createElement("span", { className: "icon-bar" })
-                        ),
-                        _react2.default.createElement(
-                            "a",
-                            { className: "navbar-brand", href: "#" },
-                            "Tic Tac Toe"
-                        )
-                    ),
-                    _react2.default.createElement(
-                        "div",
-                        { className: "collapse navbar-collapse", id: "main-navbar" },
-                        _react2.default.createElement(
-                            "ul",
-                            { className: "nav navbar-nav navbar-right" },
-                            _react2.default.createElement(
-                                "li",
-                                null,
-                                _react2.default.createElement(
-                                    "a",
-                                    { href: "http://www.zackward.net" },
-                                    "Home"
-                                )
-                            ),
-                            _react2.default.createElement(
-                                "li",
-                                null,
-                                _react2.default.createElement(
-                                    "a",
-                                    { href: "https://github.com/ZackWard/zackward.github.io/tree/master/projects/tic-tac-toe" },
-                                    "Source ",
-                                    _react2.default.createElement("i", { className: "fa fa-github", "aria-hidden": "true" })
-                                )
-                            )
-                        )
-                    )
-                )
-            );
-        }
-    }]);
-
-    return Nav;
-}(_react2.default.Component);
-
-module.exports = Nav;
-
-/***/ }),
-/* 231 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(14);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var DialogBox = function (_React$Component) {
-    _inherits(DialogBox, _React$Component);
-
-    function DialogBox(props) {
-        _classCallCheck(this, DialogBox);
-
-        return _possibleConstructorReturn(this, (DialogBox.__proto__ || Object.getPrototypeOf(DialogBox)).call(this, props));
-    }
-
-    // Ok, so this is kind of sketchy, but for right now we're going to let Bootstrap+jQuery continue to manage the modal DOM.
-    // Another option, the "React way", would be to accept a "visible" prop, and then return the modal or null based on that.
-    // However, I want to get as close as possible to the original look and feel, so I'll leave it as-is for now.
-
-    _createClass(DialogBox, [{
-        key: 'render',
-        value: function render() {
-            var _this2 = this;
-
-            var chooseX = function chooseX() {
-                _this2.props.chooseMark('X');
-            };
-            var chooseO = function chooseO() {
-                _this2.props.chooseMark('O');
-            };
-
-            return _react2.default.createElement(
-                'div',
-                { id: 'dialog', className: 'modal fade', tabIndex: '-1', role: 'dialog' },
-                _react2.default.createElement(
-                    'div',
-                    { className: 'modal-dialog' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'modal-content' },
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'modal-header' },
-                            _react2.default.createElement(
-                                'button',
-                                { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close' },
-                                _react2.default.createElement(
-                                    'span',
-                                    { 'aria-hidden': 'true' },
-                                    '\xD7'
-                                )
-                            ),
-                            _react2.default.createElement(
-                                'h4',
-                                { className: 'modal-title' },
-                                'Tic Tac Toe'
-                            )
-                        ),
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'modal-body' },
-                            _react2.default.createElement(
-                                'p',
-                                null,
-                                'Please choose your side.'
-                            )
-                        ),
-                        _react2.default.createElement(
-                            'div',
-                            { className: 'modal-footer' },
-                            _react2.default.createElement(
-                                'button',
-                                { onClick: chooseX, id: 'playerX', type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
-                                _react2.default.createElement('i', { className: 'fa fa-times fa-3x', 'aria-hidden': 'true' })
-                            ),
-                            _react2.default.createElement(
-                                'button',
-                                { onClick: chooseO, id: 'playerO', type: 'button', className: 'btn btn-default', 'data-dismiss': 'modal' },
-                                _react2.default.createElement('i', { className: 'fa fa-circle-o fa-3x', 'aria-hidden': 'true' })
-                            )
-                        )
-                    )
-                )
-            );
-        }
-    }]);
-
-    return DialogBox;
-}(_react2.default.Component);
-
-module.exports = DialogBox;
-
-/***/ }),
-/* 232 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _react = __webpack_require__(14);
-
-var _react2 = _interopRequireDefault(_react);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var TTTCell = function TTTCell(props) {
-
-    var markup = "";
-    if (String(props.mark).toLowerCase() == "x") {
-        markup = _react2.default.createElement(
-            "h1",
-            null,
-            _react2.default.createElement("i", { className: "fa fa-times", "aria-hidden": "true" })
-        );
-    } else if (String(props.mark).toLowerCase() == "o") {
-        markup = _react2.default.createElement(
-            "h1",
-            null,
-            _react2.default.createElement("i", { className: "fa fa-circle-o", "aria-hidden": "true" })
-        );
-    }
-
-    return _react2.default.createElement(
-        "td",
-        { className: props.className, onClick: function onClick() {
-                props.clickHandler(props.position);
-            } },
-        markup
-    );
-};
-
-module.exports = TTTCell;
-
-/***/ }),
-/* 233 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.handlePlayerMove = exports.gameOver = exports.makePlay = exports.changePlayerMark = exports.resetBoard = undefined;
-
-var _TTTEngine = __webpack_require__(227);
-
-var _TTTEngine2 = _interopRequireDefault(_TTTEngine);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var gameEngine = new _TTTEngine2.default();
-
-// Simple action creators
-
-// We'll need our game engine here, since this is where we're handling game logic
-var resetBoard = exports.resetBoard = function resetBoard() {
-    return {
-        type: "RESET_BOARD"
-    };
-};
-
-var changePlayerMark = exports.changePlayerMark = function changePlayerMark(player) {
-    return {
-        type: "CHANGE_PLAYER_MARK",
-        playerMark: player
-    };
-};
-
-var makePlay = exports.makePlay = function makePlay(position, player) {
-    return {
-        type: "MAKE_PLAY",
-        position: position,
-        player: player
-    };
-};
-
-var gameOver = exports.gameOver = function gameOver() {
-    return {
-        type: "GAME_OVER"
-    };
-};
-
-// The main action creator is where we'll handle our game logic. That way the reducer stays pure.
-var handlePlayerMove = exports.handlePlayerMove = function handlePlayerMove(position) {
-
-    // Ok, so here is the pseudo code
-    // First, handle the players move
-    // If it is successful (the move was a valid one) check to see if the player won
-    // If the player didn't win, have the computer choose a move
-    // Check to see if the computer won
-    // If the computer didn't win, allow the player to move again
-
-    // We'll do this with a thunk!
-    return function (dispatch, getState) {
-
-        // Make a copy of the current Redux state. 
-        // We'll have to keep this in sync with our dispatches. This is a little icky, but I'll hold my nose and do it for now.
-        // It helps keep the reducer pure.
-        var localState = JSON.parse(JSON.stringify(getState()));
-
-        // TODO: Move this somewhere better. We shouldn't need to initialize this every move
-        gameEngine.setPlayer(localState.playerMark == "X" ? "O" : "X");
-
-        // Return early if the game is already over
-        if (localState.gameOver) {
-            console.log("Nice try, but the game is over!");
-            return false;
-        }
-
-        // Return early if the position that the player is attempting to play on is already taken
-        if (localState.board[position] != null) {
-            console.log("Sorry, that position has already been played on.");
-            return false;
-        }
-
-        // This seems to be a valid move. Dispatch an update to the Redux state, and update our local state too.
-        dispatch(makePlay(position, localState.playerMark));
-        localState.board[position] = localState.playerMark;
-
-        // Check to see if the player won with this move
-        // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
-        if (gameEngine.checkWinner(localState.board) == localState.playerMark) {
-            console.log("The player just won! That should be impossible!");
-            dispatch(gameOver());
-            localState.gameOver = true;
-            localState.winner = localState.playerMark;
-        }
-
-        // TODO: Check to see if the player made a foolish move and respond "appropriately"
-
-        // Find the computers mark
-        var computerMark = localState.playerMark == "X" ? "O" : "X";
-
-        // Ok, here is the magic: The player has just made a move, but didn't win the game. Now we need to make a move.
-        var computerMove = gameEngine.decideMove(localState.board);
-        console.log("Computer move: " + computerMove);
-
-        // Dispatch the computers move, and update our local state (ick)
-        dispatch(makePlay(computerMove, computerMark));
-        localState.board[computerMove] = computerMark;
-
-        // Check to see if the computer won with this move
-        // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
-        if (gameEngine.checkWinner(localState.board) == computerMark) {
-            console.log("The computer won! I'm shocked!");
-            dispatch(gameOver());
-            localState.gameOver = true;
-            localState.winner = computerMark;
-            // Dispatch event
-        }
-    };
-};
 
 /***/ })
 /******/ ]);

@@ -25,9 +25,11 @@ export const makePlay = (position, player) => {
     };
 };
 
-export const gameOver = () => {
+export const gameOver = ({winner, winningSpaces}) => {
     return {
-        type: "GAME_OVER"
+        type: "GAME_OVER",
+        winner,
+        winningSpaces
     };
 };
 
@@ -70,9 +72,9 @@ export const handlePlayerMove = (position) => {
 
         // Check to see if the player won with this move
         // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
-        if (gameEngine.checkWinner(localState.board) == localState.playerMark) {
+        if (gameEngine.checkWinner(localState.board).winner == localState.playerMark) {
             console.log("The player just won! That should be impossible!");
-            dispatch(gameOver());
+            dispatch(gameOver(gameEngine.checkWinner(localState.board)));
             localState.gameOver = true;
             localState.winner = localState.playerMark;
         }
@@ -92,9 +94,9 @@ export const handlePlayerMove = (position) => {
 
         // Check to see if the computer won with this move
         // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
-        if (gameEngine.checkWinner(localState.board) == computerMark) {
+        if (gameEngine.checkWinner(localState.board).winner == computerMark) {
             console.log("The computer won! I'm shocked!");
-            dispatch(gameOver());
+            dispatch(gameOver(gameEngine.checkWinner(localState.board)));
             localState.gameOver = true;
             localState.winner = computerMark;
             // Dispatch event

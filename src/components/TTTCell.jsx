@@ -9,8 +9,13 @@ const TTTCell = (props) => {
         markup = <h1><i className="fa fa-circle-o" aria-hidden="true"></i></h1>;
     }
 
+    let classList = props.className;
+    if (Array.isArray(props.winningSpaces) && props.winningSpaces.indexOf(props.position) != -1) {
+        classList += " winner";
+    }
+
     return (
-        <td className={props.className} onClick={() => {props.clickHandler(props.position)}}>{markup}</td>
+        <td className={classList} onClick={() => {props.clickHandler(props.position)}}>{markup}</td>
     );
 };
 

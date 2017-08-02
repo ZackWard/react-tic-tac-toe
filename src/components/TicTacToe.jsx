@@ -18,19 +18,19 @@ export default function TicTacToe(props) {
                 <table>
                     <tbody>
                         <tr>
-                            <TTTCell position={0} mark={props.board[0]} clickHandler={clickCell} />
-                            <TTTCell className="middle" position={1} mark={props.board[1]} clickHandler={clickCell} />
-                            <TTTCell position={2} mark={props.board[2]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} position={0} mark={props.board[0]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} className="middle" position={1} mark={props.board[1]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} position={2} mark={props.board[2]} clickHandler={clickCell} />
                         </tr>
                         <tr className="middle">
-                            <TTTCell position={3} mark={props.board[3]} clickHandler={clickCell} />
-                            <TTTCell className="middle" position={4} mark={props.board[4]} clickHandler={clickCell} />
-                            <TTTCell position={5} mark={props.board[5]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} position={3} mark={props.board[3]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} className="middle" position={4} mark={props.board[4]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} position={5} mark={props.board[5]} clickHandler={clickCell} />
                         </tr>
                         <tr>
-                            <TTTCell position={6} mark={props.board[6]} clickHandler={clickCell} />
-                            <TTTCell className="middle" position={7} mark={props.board[7]} clickHandler={clickCell} />
-                            <TTTCell position={8} mark={props.board[8]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} position={6} mark={props.board[6]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} className="middle" position={7} mark={props.board[7]} clickHandler={clickCell} />
+                            <TTTCell winningSpaces={props.winningSpaces} position={8} mark={props.board[8]} clickHandler={clickCell} />
                         </tr>
                     </tbody>
                 </table>
