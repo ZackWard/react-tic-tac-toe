@@ -11392,7 +11392,7 @@ var _stateManagement = __webpack_require__(225);
 
 var _stateManagement2 = _interopRequireDefault(_stateManagement);
 
-var _GameContainer = __webpack_require__(227);
+var _GameContainer = __webpack_require__(228);
 
 var _GameContainer2 = _interopRequireDefault(_GameContainer);
 
@@ -24957,22 +24957,20 @@ Object.defineProperty(exports, "__esModule", {
 
 var _redux = __webpack_require__(89);
 
-var _TTTEngine = __webpack_require__(226);
+var _reduxThunk = __webpack_require__(226);
 
-var _TTTEngine2 = _interopRequireDefault(_TTTEngine);
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Initialize game engine
 // Use Redux with react-redux bindings for state management
 // Because Tic-tac-toe state is fairly straightforward, let's keep the reducers, actions, etc in this file
-
-var computerPlayer = new _TTTEngine2.default();
 
 var defaultState = {
     playerMark: "X",
     board: [null, null, null, null, null, null, null, null, null],
-    gameOver: false
+    gameOver: false,
+    winner: false
 };
 
 var reducer = function reducer() {
@@ -24985,55 +24983,15 @@ var reducer = function reducer() {
     switch (action.type) {
 
         case "CHANGE_PLAYER_MARK":
-            console.log("Changing player mark to " + action.playerMark);
             newState.playerMark = action.playerMark;
-
-            // Also, update our computer player to have the opposing mark
-            var newComputerMark = action.playerMark == "X" ? "O" : "X";
-            computerPlayer.setPlayer(newComputerMark);
             break;
 
         case "MAKE_PLAY":
-
-            // Return early if the game is already over
-            if (state.gameOver) {
-                console.log("Nice try, but the game is over!");
-                break;
-            }
-
-            // Return early if the position that the player is attempting to play on is already taken
-            if (state.board[action.position] != null) {
-                console.log("Sorry, that position has already been played on.");
-                break;
-            }
-
             newState.board[action.position] = action.player;
+            break;
 
-            // TODO: Check to see if the player made a foolish move and respond "appropriately"
-
-            // Check to see if the player won with this move
-            // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
-            if (computerPlayer.checkWinner(newState.board) == state.playerMark) {
-                console.log("The player just won! That should be impossible!");
-                newState.gameOver = true;
-                break;
-            }
-
-            // Find the computers mark
-            var computerMark = state.playerMark == "X" ? "O" : "X";
-
-            // Ok, here is the magic: The player has just made a move, but didn't win the game. Now we need to make a move.
-            var computerMove = computerPlayer.decideMove(newState.board);
-            console.log("Computer move: " + computerMove);
-            newState.board[computerMove] = computerMark;
-
-            // Check to see if the computer won with this move
-            // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
-            if (computerPlayer.checkWinner(newState.board) == computerMark) {
-                console.log("The computer won! I'm shocked!");
-                newState.gameOver = true;
-                // Dispatch event
-            }
+        case "GAME_OVER":
+            newState.gameOver = true;
             break;
 
         case "RESET_BOARD":
@@ -25045,10 +25003,39 @@ var reducer = function reducer() {
     return newState;
 };
 
-exports.default = (0, _redux.createStore)(reducer);
+exports.default = (0, _redux.createStore)(reducer, (0, _redux.applyMiddleware)(_reduxThunk2.default));
 
 /***/ }),
 /* 226 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
+
+/***/ }),
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25088,7 +25075,6 @@ var TTTEngine = function () {
   _createClass(TTTEngine, [{
     key: 'setPlayer',
     value: function setPlayer(player) {
-      console.log("Setting player: " + player);
       if (player !== 'X' && player !== 'O') return false;
       this.player = player;
       if (player === 'X') {
@@ -25107,8 +25093,8 @@ var TTTEngine = function () {
         var c = combo[2];
 
         if (board[a] === mark && board[b] === mark && board[c] === null) result.push(c);
-        if (board[b] === mark && board[c] === mark && board[a] === null) result.push(a);
-        if (board[a] === mark && board[c] === mark && board[b] === null) result.push(b);
+        if (board[a] === mark && board[b] === null && board[c] === mark) result.push(b);
+        if (board[a] === null && board[b] === mark && board[c] === mark) result.push(a);
       });
       return result;
     }
@@ -25335,7 +25321,7 @@ exports.default = TTTEngine;
 ;
 
 /***/ }),
-/* 227 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25347,15 +25333,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _reactRedux = __webpack_require__(85);
 
-var _TicTacToe = __webpack_require__(228);
+var _TicTacToe = __webpack_require__(229);
 
 var _TicTacToe2 = _interopRequireDefault(_TicTacToe);
 
-var _actionCreators = __webpack_require__(232);
+var _actionCreators = __webpack_require__(233);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-console.log(_TicTacToe2.default);
 
 var mapStateToProps = function mapStateToProps(state) {
     return {
@@ -25372,7 +25356,7 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
             dispatch((0, _actionCreators.changePlayerMark)(mark));
         },
         makePlay: function makePlay(position, player) {
-            dispatch((0, _actionCreators.makePlay)(position, player));
+            dispatch((0, _actionCreators.handlePlayerMove)(position, player));
         },
         resetBoard: function resetBoard() {
             dispatch((0, _actionCreators.resetBoard)());
@@ -25384,7 +25368,7 @@ var GameContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps
 exports.default = GameContainer;
 
 /***/ }),
-/* 228 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25399,15 +25383,15 @@ var _react = __webpack_require__(14);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Nav = __webpack_require__(229);
+var _Nav = __webpack_require__(230);
 
 var _Nav2 = _interopRequireDefault(_Nav);
 
-var _DialogBox = __webpack_require__(230);
+var _DialogBox = __webpack_require__(231);
 
 var _DialogBox2 = _interopRequireDefault(_DialogBox);
 
-var _TTTCell = __webpack_require__(231);
+var _TTTCell = __webpack_require__(232);
 
 var _TTTCell2 = _interopRequireDefault(_TTTCell);
 
@@ -25470,7 +25454,7 @@ function TicTacToe(props) {
 };
 
 /***/ }),
-/* 229 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25567,7 +25551,7 @@ var Nav = function (_React$Component) {
 module.exports = Nav;
 
 /***/ }),
-/* 230 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25674,7 +25658,7 @@ var DialogBox = function (_React$Component) {
 module.exports = DialogBox;
 
 /***/ }),
-/* 231 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25715,7 +25699,7 @@ var TTTCell = function TTTCell(props) {
 module.exports = TTTCell;
 
 /***/ }),
-/* 232 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25724,8 +25708,19 @@ module.exports = TTTCell;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.handlePlayerMove = exports.gameOver = exports.makePlay = exports.changePlayerMark = exports.resetBoard = undefined;
+
+var _TTTEngine = __webpack_require__(227);
+
+var _TTTEngine2 = _interopRequireDefault(_TTTEngine);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var gameEngine = new _TTTEngine2.default();
+
 // Simple action creators
 
+// We'll need our game engine here, since this is where we're handling game logic
 var resetBoard = exports.resetBoard = function resetBoard() {
     return {
         type: "RESET_BOARD"
@@ -25744,6 +25739,83 @@ var makePlay = exports.makePlay = function makePlay(position, player) {
         type: "MAKE_PLAY",
         position: position,
         player: player
+    };
+};
+
+var gameOver = exports.gameOver = function gameOver() {
+    return {
+        type: "GAME_OVER"
+    };
+};
+
+// The main action creator is where we'll handle our game logic. That way the reducer stays pure.
+var handlePlayerMove = exports.handlePlayerMove = function handlePlayerMove(position) {
+
+    // Ok, so here is the pseudo code
+    // First, handle the players move
+    // If it is successful (the move was a valid one) check to see if the player won
+    // If the player didn't win, have the computer choose a move
+    // Check to see if the computer won
+    // If the computer didn't win, allow the player to move again
+
+    // We'll do this with a thunk!
+    return function (dispatch, getState) {
+
+        // Make a copy of the current Redux state. 
+        // We'll have to keep this in sync with our dispatches. This is a little icky, but I'll hold my nose and do it for now.
+        // It helps keep the reducer pure.
+        var localState = JSON.parse(JSON.stringify(getState()));
+
+        // TODO: Move this somewhere better. We shouldn't need to initialize this every move
+        gameEngine.setPlayer(localState.playerMark == "X" ? "O" : "X");
+
+        // Return early if the game is already over
+        if (localState.gameOver) {
+            console.log("Nice try, but the game is over!");
+            return false;
+        }
+
+        // Return early if the position that the player is attempting to play on is already taken
+        if (localState.board[position] != null) {
+            console.log("Sorry, that position has already been played on.");
+            return false;
+        }
+
+        // This seems to be a valid move. Dispatch an update to the Redux state, and update our local state too.
+        dispatch(makePlay(position, localState.playerMark));
+        localState.board[position] = localState.playerMark;
+
+        // Check to see if the player won with this move
+        // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
+        if (gameEngine.checkWinner(localState.board) == localState.playerMark) {
+            console.log("The player just won! That should be impossible!");
+            dispatch(gameOver());
+            localState.gameOver = true;
+            localState.winner = localState.playerMark;
+        }
+
+        // TODO: Check to see if the player made a foolish move and respond "appropriately"
+
+        // Find the computers mark
+        var computerMark = localState.playerMark == "X" ? "O" : "X";
+
+        // Ok, here is the magic: The player has just made a move, but didn't win the game. Now we need to make a move.
+        var computerMove = gameEngine.decideMove(localState.board);
+        console.log("Computer move: " + computerMove);
+
+        // Dispatch the computers move, and update our local state (ick)
+        dispatch(makePlay(computerMove, computerMark));
+        localState.board[computerMove] = computerMark;
+
+        // Check to see if the computer won with this move
+        // Possible return values from TTTEngine.checkWinner(board): "X", "O", "Cat"
+        if (gameEngine.checkWinner(localState.board) == computerMark) {
+            console.log("The computer won! I'm shocked!");
+            dispatch(gameOver());
+            localState.gameOver = true;
+            localState.winner = computerMark;
+            // Dispatch event
+        }
     };
 };
 

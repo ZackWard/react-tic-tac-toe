@@ -26,7 +26,6 @@ export default class TTTEngine {
   }
   
   setPlayer(player) {
-    console.log("Setting player: " + player);
     if (player !== 'X' && player !== 'O') return false;
     this.player = player;
     if (player === 'X') {
@@ -44,8 +43,8 @@ export default class TTTEngine {
       let c = combo[2];
 
       if (board[a] === mark && board[b] === mark && board[c] === null) result.push(c);
-      if (board[b] === mark && board[c] === mark && board[a] === null) result.push(a);
-      if (board[a] === mark && board[c] === mark && board[b] === null) result.push(b);
+      if (board[a] === mark && board[b] === null && board[c] === mark) result.push(b);
+      if (board[a] === null && board[b] === mark && board[c] === mark) result.push(a);
     });
     return result;
   }

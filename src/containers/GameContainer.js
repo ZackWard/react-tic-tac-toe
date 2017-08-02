@@ -1,8 +1,6 @@
 import {connect} from "react-redux";
 import TicTacToe from "../components/TicTacToe.jsx";
-import {doPlayerTurn, changePlayerMark, makePlay, resetBoard} from "../actionCreators.js";
-
-console.log(TicTacToe);
+import {handlePlayerMove, changePlayerMark, resetBoard} from "../actionCreators.js";
 
 const mapStateToProps = (state) => {
     return {
@@ -19,7 +17,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(changePlayerMark(mark));
         },
         makePlay: (position, player) => {
-            dispatch(makePlay(position, player));
+            dispatch(handlePlayerMove(position, player));
         },
         resetBoard: () => {
             dispatch(resetBoard());
