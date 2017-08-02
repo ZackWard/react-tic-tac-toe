@@ -2,86 +2,42 @@ import React from "react";
 
 import Nav from "./Nav.jsx";
 import DialogBox from "./DialogBox.jsx";
-import Board from "./Board.jsx";
+import TTTCell from "./TTTCell.jsx";
 
-import TTTEngine from "./TTTEngine.js";
+export default function TicTacToe(props) {
 
-class TicTacToe extends React.Component {
+    let clickCell = (position) => {
+        props.makePlay(position, props.playerMark);
+    };
 
-    constructor(props) {
-        super(props);
-        this.gameEngine = new TTTEngine();
-        this.gameEngine.setPlayer("O");
-        this.state = {
-            playerMark: "X",
-            board: [null, null, null, null, null, null, null, null, null]
-        };
-
-        // bind methods so that 'this' will refer to this component in the method.
-        this.handleClick = this.handleClick.bind(this);
-        this.resetGame = this.resetGame.bind(this);
-        this.chooseMark = this.chooseMark.bind(this);
-    }
-
-    chooseMark(mark) {
-        // Choosing X or O only happens at the beginning of the game, so if the user has chosen 'O', we need to go ahead and make the first move.
-        this.gameEngine.setPlayer(mark == "X" ? "O" : "X");
-        this.setState({
-            playerMark: mark
-        });
-    }
-
-    resetGame() {
-        console.log("Resetting game");
-        this.setState({
-            board: [null, null, null, null, null, null, null, null, null]
-        });
-    }
-
-    handleClick(position) {
-        let computerMark = this.state.playerMark == "X" ? "O" : "X";
-
-        console.log("From TTT: Got click for position #" + position);
-
-        // Return early if this position isn't empty
-        if (this.state.board[position] != null) {
-            console.log("Sorry, that position is already occupied.");
-            return;
-        }
-
-        // Update the board with the player's move
-        let newBoard = JSON.parse(JSON.stringify(this.state.board));
-        newBoard[position] = this.state.playerMark;
-
-        // Check to see if the player won.
-        if (this.gameEngine.checkWinner(newBoard) == this.state.playerMark) {
-            console.log("The player won! This should never happen. The game is broken.");
-        }
-
-        // Get the computers move and update the board with it
-        let computerMove = this.gameEngine.decideMove(newBoard);
-        console.log("Computer move: " + computerMove);
-        newBoard[computerMove] = computerMark;
-
-        // Check to see if the computer won
-        if (this.gameEngine.checkWinner(newBoard) == computerMark) {
-            console.log("The computer won! I'm not surprised.");
-        }
-
-        this.setState({
-            board: newBoard
-        });
-    }
-
-    render() {
-        return (
-            <div>
-                <Nav />
-                <DialogBox chooseMark={this.chooseMark}/>
-                <Board data={this.state.board} handleClick={this.handleClick} resetGame={this.resetGame}/>
+    return (
+        <div>
+            <Nav />
+            <DialogBox chooseMark={props.changePlayerMark}/>
+            <div className="board">
+                <table>
+                    <tbody>
+                        <tr>
+                            <TTTCell position={0} mark={props.board[0]} clickHandler={clickCell} />
+                            <TTTCell className="middle" position={1} mark={props.board[1]} clickHandler={clickCell} />
+                            <TTTCell position={2} mark={props.board[2]} clickHandler={clickCell} />
+                        </tr>
+                        <tr className="middle">
+                            <TTTCell position={3} mark={props.board[3]} clickHandler={clickCell} />
+                            <TTTCell className="middle" position={4} mark={props.board[4]} clickHandler={clickCell} />
+                            <TTTCell position={5} mark={props.board[5]} clickHandler={clickCell} />
+                        </tr>
+                        <tr>
+                            <TTTCell position={6} mark={props.board[6]} clickHandler={clickCell} />
+                            <TTTCell className="middle" position={7} mark={props.board[7]} clickHandler={clickCell} />
+                            <TTTCell position={8} mark={props.board[8]} clickHandler={clickCell} />
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="options">
+                    <button data-toggle="modal" data-target="#dialog" onClick={props.resetBoard} className="btn btn-default">Reset</button>
+                </div>
             </div>
-        );
-    }
-}
-
-module.exports = TicTacToe;
+        </div>
+    );
+};

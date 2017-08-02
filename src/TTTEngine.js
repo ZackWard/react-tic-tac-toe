@@ -10,7 +10,7 @@
 // Empty side: The player plays in a middle square on any of the 4 sides.
 
 
-class TTTEngine {
+export default class TTTEngine {
   
   constructor() {
     
@@ -250,6 +250,4 @@ class TTTEngine {
         return moves[0];
     }
   }
-}
-
-module.exports = TTTEngine;
+};
