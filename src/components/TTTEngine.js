@@ -26,6 +26,7 @@ class TTTEngine {
   }
   
   setPlayer(player) {
+    console.log("Setting player: " + player);
     if (player !== 'X' && player !== 'O') return false;
     this.player = player;
     if (player === 'X') {
@@ -209,8 +210,9 @@ class TTTEngine {
     // If opponent is in a corner, take the opposite corner
     let oppositeCorners = [[0, 8], [2, 6]];
     moves = oppositeCorners.map(corner => {
-      if (board[corner[0]] === this.opponent && board[corner[1]] === null) return corner[1];
-      if (board[corner[1]] === this.opponent && board[corner[0]] === null) return corner[0];
+      if (board[corner[0]] == this.opponent && board[corner[1]] == null) return corner[1];
+      if (board[corner[1]] == this.opponent && board[corner[0]] == null) return corner[0];
+      return null;
     });
     moves = moves.filter(function (item) {
       if (item === null) return false;
@@ -219,6 +221,7 @@ class TTTEngine {
     if (moves.length > 0) return this.randomMove(moves);
 
     // Just take any empty corner
+    console.log("Taking empty corner");
     let corners = [0, 2, 6, 8];
     corners = corners.filter(function (corner) {
       if (board[corner] !== null) return false;
@@ -227,6 +230,7 @@ class TTTEngine {
     if (corners.length > 0) return this.randomMove(corners);
 
     // Take any empty side
+    console.log("Taking empty side");
     let sides = [1, 3, 5, 7];
     sides = sides.filter(function (side) {
       if (board[side] !== null) return false;
