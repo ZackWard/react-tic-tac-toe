@@ -19,8 +19,6 @@ export default class minimaxEngine {
     }
 
     findBestMove(board) {
-        console.log("Finding best move for board:");
-        this.printBoard(board);
         return this.minimax(board, this.player).position;
     }
 
@@ -100,29 +98,4 @@ export default class minimaxEngine {
         });
         return winner;
     }
-
-    printBoard(gameBoard) {
-        let board = gameBoard.map(position => {
-            if (position == null) {
-                return " ";
-            } else {
-                return position;
-            }
-        });
-
-        console.log(" ");
-        console.log(" " + board[0] + " | " + board[1] + " | " + board[2]);
-        console.log(" ---------");
-        console.log(" " + board[3] + " | " + board[4] + " | " + board[5]);
-        console.log(" ---------");
-        console.log(" " + board[6] + " | " + board[7] + " | " + board[8]);
-        console.log(" ");
-    }
 }
-
-// // Testing stuff
-// let engineTest = new minimaxEngine('X');
-// let testBoard = ['O', null, 'X', 'X', null, 'X', null, 'O', 'O'];
-
-// engineTest.printBoard(testBoard);
-// console.log("Recommended move: " + engineTest.findBestMove(testBoard));
