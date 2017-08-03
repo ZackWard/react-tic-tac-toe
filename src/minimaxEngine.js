@@ -70,7 +70,7 @@ export default class minimaxEngine {
     }
 
     score(board) {
-        let winner = this.findWinner(board);
+        let winner = this.findWinner(board).winner;
         if (this.player == winner) {
             return 10;
         } else if (winner == false) {
@@ -82,7 +82,7 @@ export default class minimaxEngine {
     }
 
     gameOver(board) {
-        if (this.findWinner(board) != false || this.findPotentialMoves(board).length < 1) {
+        if (this.findWinner(board).winner != false || this.findPotentialMoves(board).length < 1) {
             return true;
         }
         return false;
@@ -91,11 +91,18 @@ export default class minimaxEngine {
     findWinner(board) {
         // Check to see if somebody has won this board
         let winner = false;
+        let winningSpaces = null;
+
         this.winningCombos.forEach(combo => {
             if (board[combo[0]] != null && board[combo[0]] == board[combo[1]] && board[combo[1]] == board[combo[2]]) {
                 winner = board[combo[0]];
+                winningSpaces = [combo[0], combo[1], combo[2]];
             }
         });
-        return winner;
+
+        return {
+            winner,
+            winningSpaces
+        };
     }
 }

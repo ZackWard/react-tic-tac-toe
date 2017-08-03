@@ -1,8 +1,6 @@
 // We'll need our game engine here, since this is where we're handling game logic
 import minimaxEngine from "./minimaxEngine";
-import TTTEngine from "./TTTEngine";
-
-let gameEngine = new TTTEngine();
+let mmEngine = new minimaxEngine();
 
 // Simple action creators
 
@@ -35,7 +33,7 @@ export const handlePlayerMove = (position) => {
         };
         let state = getState();
         let computerMark = state.playerMark == "X" ? "O" : "X";
-        gameEngine.setPlayer(computerMark);
+        mmEngine.setPlayer(computerMark);
 
         // Return early if the game has been won
         if (state.winner != null) {
@@ -58,7 +56,7 @@ export const handlePlayerMove = (position) => {
         tempBoard[position] = state.playerMark;
 
         // Check to see if the player has won
-        let playerMoveResult = gameEngine.checkWinner(tempBoard);
+        let playerMoveResult = mmEngine.findWinner(tempBoard);
         if (playerMoveResult.winner == state.playerMark) {
             action.winner = state.playerMark;
             action.winningSpaces = playerMoveResult.winningSpaces;
@@ -68,12 +66,11 @@ export const handlePlayerMove = (position) => {
         }
 
         // Ok, time for the computer to make a move using the minimax algorithm
-        let mmEngine = new minimaxEngine(computerMark);
         action.computerMove = mmEngine.findBestMove(tempBoard);
         tempBoard[action.computerMove] = computerMark;
 
         // Check to see if the computer won
-        let computerMoveResult = gameEngine.checkWinner(tempBoard);
+        let computerMoveResult = mmEngine.findWinner(tempBoard);
         if (computerMoveResult.winner == computerMark) {
             action.winner = computerMark;
             action.winningSpaces = computerMoveResult.winningSpaces;
