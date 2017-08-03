@@ -16,8 +16,7 @@ const reducer = (state = defaultState, action) => {
     // Don't mutate state, return a new copy
     let newState = JSON.parse(JSON.stringify(state));
 
-    switch (action.type) {
-        
+    switch (action.type) {      
         case "CHANGE_PLAYER_MARK":
             newState.playerMark = action.playerMark;
             break;

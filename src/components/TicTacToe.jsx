@@ -35,7 +35,11 @@ export default function TicTacToe(props) {
                     </tbody>
                 </table>
                 <div id="options">
-                    <button data-toggle="modal" data-target="#dialog" onClick={props.resetBoard} className="btn btn-default">Reset</button>
+                    <button disabled className="btn btn-default">Undo</button>
+                    <button onClick={props.resetBoard} className="btn btn-default">Reset</button>
+                    <button disabled className="btn btn-default">Redo</button>
+                    <br />
+                    <button className="btn btn-default" data-toggle="modal" data-target="#dialog">Options</button>
                 </div>
             </div>
         </div>

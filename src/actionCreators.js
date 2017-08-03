@@ -36,22 +36,12 @@ export const gameOver = ({winner, winningSpaces}) => {
 // The main action creator is where we'll handle our game logic. That way the reducer stays pure.
 export const handlePlayerMove = (position) => {
 
-    // Ok, so here is the pseudo code
-    // First, handle the players move
-    // If it is successful (the move was a valid one) check to see if the player won
-    // If the player didn't win, have the computer choose a move
-    // Check to see if the computer won
-    // If the computer didn't win, allow the player to move again
-
-    // We'll do this with a thunk!
     return function (dispatch, getState) {
 
         // Make a copy of the current Redux state. 
         // We'll have to keep this in sync with our dispatches. This is a little icky, but I'll hold my nose and do it for now.
         // It helps keep the reducer pure.
         let localState = JSON.parse(JSON.stringify(getState()));
-
-        // TODO: Move this somewhere better. We shouldn't need to initialize this every move
         gameEngine.setPlayer(localState.playerMark == "X" ? "O" : "X");
         
         // Return early if the game is already over
@@ -80,6 +70,11 @@ export const handlePlayerMove = (position) => {
         }
 
         // TODO: Check to see if the player made a foolish move and respond "appropriately"
+        // Bad moves: 
+        //   The player could have won, but didn't
+        //   The player could have blocked the opponent, but didn't
+        // Note: This will probably be easier to implement after implementing minimax. Then, it will just be a matter of scoring the player's
+        // potential moves, scoring their actual move, and notifying them of sub-par moves.
 
         // Find the computers mark
         let computerMark = localState.playerMark == "X" ? "O" : "X";
