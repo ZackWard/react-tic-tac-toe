@@ -8,7 +8,8 @@ const defaultState = {
     playerMark: "X",
     board: [null, null, null, null, null, null, null, null, null],
     winner: null,
-    winningSpaces: null
+    winningSpaces: null,
+    optimalMove: null
 };
 
 const reducer = (state = defaultState, action) => {
@@ -29,11 +30,14 @@ const reducer = (state = defaultState, action) => {
                 newState.board[action.computerMove] = state.playerMark == "X" ? "O" : "X";
             }
             
-            // Winner?
+            // Winner
             newState.winner = action.winner;
 
-            // Winning combos?
+            // Winning combos
             newState.winningSpaces = action.winningSpaces;
+
+            // Optimal next move
+            newState.optimalMove = action.optimalMove;
 
             break;
         
