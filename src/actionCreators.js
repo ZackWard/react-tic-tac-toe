@@ -1,6 +1,6 @@
 // We'll need our game engine here, since this is where we're handling game logic
-import TTTEngine from "./TTTEngine";
 import minimaxEngine from "./minimaxEngine";
+import TTTEngine from "./TTTEngine";
 
 let gameEngine = new TTTEngine();
 
@@ -67,11 +67,7 @@ export const handlePlayerMove = (position) => {
             return;
         }
 
-        // Ok, time for the computer to make a move
-        // action.computerMove = gameEngine.decideMove(tempBoard);
-        // tempBoard[action.computerMove] = computerMark;
-
-        // Let's try the minimax engine....
+        // Ok, time for the computer to make a move using the minimax algorithm
         let mmEngine = new minimaxEngine(computerMark);
         action.computerMove = mmEngine.findBestMove(tempBoard);
         tempBoard[action.computerMove] = computerMark;
