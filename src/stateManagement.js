@@ -7,8 +7,7 @@ import thunk from 'redux-thunk';
 const defaultState = {
     playerMark: "X",
     board: [null, null, null, null, null, null, null, null, null],
-    gameOver: false,
-    winner: false,
+    winner: null,
     winningSpaces: null
 };
 
@@ -20,21 +19,27 @@ const reducer = (state = defaultState, action) => {
         case "CHANGE_PLAYER_MARK":
             newState.playerMark = action.playerMark;
             break;
-        
-        case "MAKE_PLAY":
-            newState.board[action.position] = action.player;
-            break;
 
-        case "GAME_OVER": 
-            newState.gameOver = true;
+        case "HANDLE_PLAYER_MOVE":
+            // Player move
+            newState.board[action.playerMove] = state.playerMark;
+
+            // Computer move (could be null, if the player won. But it shouldn't even be null.)
+            if (action.computerMove != null) {
+                newState.board[action.computerMove] = state.playerMark == "X" ? "O" : "X";
+            }
+            
+            // Winner?
             newState.winner = action.winner;
+
+            // Winning combos?
             newState.winningSpaces = action.winningSpaces;
+
             break;
         
         case "RESET_BOARD": 
             newState.board = [null, null, null, null, null, null, null, null, null];
-            newState.gameOver = false;
-            newState.winner = false;
+            newState.winner = null;
             newState.winningSpaces = null;
             break;
     }
