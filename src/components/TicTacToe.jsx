@@ -10,6 +10,12 @@ export default function TicTacToe(props) {
         props.makePlay(position, props.playerMark);
     };
 
+    let openSpaces = props.board.filter(space => space == null).length;
+    let resetButtonText = "Reset";
+    if (openSpaces < 1 || props.winner != null) {
+        resetButtonText = "Try again?";
+    }
+
     return (
         <div>
             <Nav />
@@ -36,7 +42,7 @@ export default function TicTacToe(props) {
                 </table>
                 <div id="options">
                     <button disabled className="btn btn-default">Undo</button>
-                    <button onClick={props.resetBoard} className="btn btn-default">Reset</button>
+                    <button onClick={props.resetBoard} className="btn btn-default">{resetButtonText}</button>
                     <button disabled className="btn btn-default">Redo</button>
                     <br />
                     <button className="btn btn-default" data-toggle="modal" data-target="#dialog">Options</button>
