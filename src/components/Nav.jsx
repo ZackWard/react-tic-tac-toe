@@ -17,7 +17,7 @@ class Nav extends React.Component {
                     <div className="collapse navbar-collapse" id="main-navbar">
                         <ul className="nav navbar-nav navbar-right">
                             <li><a href="http://www.zackward.net">Home</a></li>
-                            <li><a href="https://github.com/ZackWard/zackward.github.io/tree/master/projects/tic-tac-toe">Source <i className="fa fa-github" aria-hidden="true"></i></a></li>
+                            <li><a href="https://github.com/ZackWard/react-tic-tac-toe">Source <i className="fa fa-github" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
                 </div>
