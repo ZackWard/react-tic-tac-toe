@@ -3,17 +3,51 @@ import minimaxEngine from "./minimaxEngine";
 let mmEngine = new minimaxEngine();
 
 // Simple action creators
-
-export const resetBoard = () => {
-    return {
-        type: "RESET_BOARD"
-    };
-};
-
 export const changePlayerMark = (player) => {
     return {
         type: "CHANGE_PLAYER_MARK",
         playerMark: player
+    };
+};
+
+export const undoMove = () => {
+    return {
+        type: "UNDO_MOVE"
+    };
+};
+
+export const redoMove = () => {
+    return {
+        type: "REDO_MOVE"
+    };
+};
+
+// Reseting the board will also begin to load a fun new gif ;)
+// I'll use a thunk here so that I can begin to load the gif, but still reset the board and allow the player to begin playing
+export const resetBoard = () => {
+    return function (dispatch) {
+
+        dispatch({
+            type: "RESET_BOARD"
+        });
+
+        dispatch({
+            type: "BEGIN_FETCH_FAIL_NOTIFICATION_GIF"
+        });
+
+        let gifTag = "fail";
+        let url="http://api.giphy.com/v1/gifs/random?api_key=7c4d694af8d44968b781f38c13396f88&tag=" + gifTag + "&rating=g"
+
+        fetch(url)
+        .then(res => res.json())
+        .then(jsonResponse => {
+            console.log(jsonResponse);
+            dispatch({
+                type: "FINISH_FETCH_FAIL_NOTIFICATION_GIF",
+                source: jsonResponse.data.image_mp4_url
+            });
+        });
+
     };
 };
 
@@ -36,13 +70,13 @@ export const handlePlayerMove = (position) => {
         mmEngine.setPlayer(computerMark);
 
         // Return early if the game has been won
-        if (state.winner != null) {
+        if (state.game.present.winner != null) {
             console.log("Sorry, the game is over!");
             return false;
         }
 
         // Return early if the player is trying to move into a space that is already occupied
-        if (state.board[position] != null) {
+        if (state.game.present.board[position] != null) {
             console.log("Invalid move!");
             return false;
         }
@@ -52,7 +86,7 @@ export const handlePlayerMove = (position) => {
 
         // Make a copy of the board, and add the player's move so that we can use it to check for a winner and calculate
         // the computer's move.
-        let tempBoard = JSON.parse(JSON.stringify(state.board));
+        let tempBoard = JSON.parse(JSON.stringify(state.game.present.board));
         tempBoard[position] = state.playerMark;
 
         // Check to see if the player has won

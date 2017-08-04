@@ -1,13 +1,17 @@
 import {connect} from "react-redux";
 import TicTacToe from "../components/TicTacToe.jsx";
-import {handlePlayerMove, changePlayerMark, resetBoard} from "../actionCreators.js";
+import {handlePlayerMove, changePlayerMark, undoMove, redoMove, resetBoard} from "../actionCreators.js";
 
 const mapStateToProps = (state) => {
     return {
         playerMark: state.playerMark,
-        board: state.board,
-        winner: state.winner,
-        winningSpaces: state.winningSpaces
+        board: state.game.present.board,
+        winner: state.game.present.winner,
+        winningSpaces: state.game.present.winningSpaces,
+        failGifLoading: state.failNotification.loading,
+        failGif: state.failNotification.source,
+        undoAvailable: state.game.past.length > 0,
+        redoAvailable: state.game.future.length > 0
     };
 };
 
@@ -23,6 +27,12 @@ const mapDispatchToProps = (dispatch) => {
         },
         resetBoard: () => {
             dispatch(resetBoard());
+        },
+        undoMove: () => {
+            dispatch(undoMove());
+        },
+        redoMove: () => {
+            dispatch(redoMove());
         }
     };
 };

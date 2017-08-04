@@ -6,10 +6,19 @@ import thunk from 'redux-thunk';
 
 const defaultState = {
     playerMark: "X",
-    board: [null, null, null, null, null, null, null, null, null],
-    winner: null,
-    winningSpaces: null,
-    optimalMove: null
+    game: {
+        past: [],
+        present: {
+            board: [null, null, null, null, null, null, null, null, null],
+            winner: null,
+            winningSpaces: null
+        },
+        future: []
+    },
+    failNotification: {
+        loading: false,
+        source: null
+    }
 };
 
 const reducer = (state = defaultState, action) => {
@@ -22,30 +31,62 @@ const reducer = (state = defaultState, action) => {
             break;
 
         case "HANDLE_PLAYER_MOVE":
+
+            // Make a copy of the "present" board and push it into the past
+            newState.game.past.push(JSON.parse(JSON.stringify(newState.game.present)));
+
+            // Debug:
+            console.log(newState);
+
             // Player move
-            newState.board[action.playerMove] = state.playerMark;
+            newState.game.present.board[action.playerMove] = state.playerMark;
 
             // Computer move (could be null, if the player won. But it shouldn't even be null.)
             if (action.computerMove != null) {
-                newState.board[action.computerMove] = state.playerMark == "X" ? "O" : "X";
+                newState.game.present.board[action.computerMove] = state.playerMark == "X" ? "O" : "X";
             }
             
             // Winner
-            newState.winner = action.winner;
+            newState.game.present.winner = action.winner;
 
             // Winning combos
-            newState.winningSpaces = action.winningSpaces;
+            newState.game.present.winningSpaces = action.winningSpaces;
 
-            // Optimal next move
-            newState.optimalMove = action.optimalMove;
+            // If we're making a move, we need a fresh future
+            newState.game.future = [];
 
+            break;
+
+        case "UNDO_MOVE": 
+            console.log("Trying to undo the move");
+            // Move the present to the future, move the past to the present
+            newState.game.future.unshift(newState.game.present);
+            newState.game.present = newState.game.past.pop();
+            break;
+        
+        case "REDO_MOVE":
+            console.log("Trying to redo the move!");
+            // Move the present to the past, move the future to the present
+            newState.game.past.push(newState.game.present);
+            newState.game.present = newState.game.future.shift();
             break;
         
         case "RESET_BOARD": 
-            newState.board = [null, null, null, null, null, null, null, null, null];
-            newState.winner = null;
-            newState.winningSpaces = null;
+            newState.game.past = [];
+            newState.game.present = {
+                board: [null, null, null, null, null, null, null, null, null],
+                winner: null,
+                winningSpaces: null
+            };
+            newState.game.past = [];
             break;
+        
+        case "BEGIN_FETCH_FAIL_NOTIFICATION_GIF": 
+            newState.failNotification.loading = true;
+            break;
+        case "FINISH_FETCH_FAIL_NOTIFICATION_GIF":
+            newState.failNotification.loading = false;
+            newState.failNotification.source = action.source;
     }
 
     return newState;
