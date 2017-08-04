@@ -36,7 +36,7 @@ export const resetBoard = () => {
         });
 
         let gifTag = "fail";
-        let url="http://api.giphy.com/v1/gifs/random?api_key=7c4d694af8d44968b781f38c13396f88&tag=" + gifTag + "&rating=g"
+        let url="https://api.giphy.com/v1/gifs/random?api_key=7c4d694af8d44968b781f38c13396f88&tag=" + gifTag + "&rating=g"
 
         fetch(url)
         .then(res => res.json())
