@@ -14,7 +14,7 @@ Migration of my tic-tac-toe game to React/Redux
 
 ### Day 3: (Extra Credit) Due 8/7/17 11:00am MT
 
-- [ ] Allow player to undo moves
+- [X] Allow player to undo moves
 - [ ] Additional features?
 
 ### Bonus Round

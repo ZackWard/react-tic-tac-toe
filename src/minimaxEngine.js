@@ -22,22 +22,27 @@ export default class minimaxEngine {
         return this.minimax(board, this.player).position;
     }
 
-    minimax(board, player) {
+    minimax(board, player, depth=1) {
         // First, check to see if the game is over. This could happen if somebody won, or if there are no moves left.
         // minimax can only evaluate a finished game. If the game is over, return the value of the result.
         if (this.gameOver(board)) {
-            return {score: this.score(board, player)};
+            return {
+                score: this.score(board, player),
+                depth: depth
+            };
         }
 
         // Ok, we couldn't score this board, so we need to try every possible position, check the score on each one,
         // and choose the best one. 
         let moves = [];
-        this.findPotentialMoves(board).forEach(possibleMove => {
+        this.findPotentialMoves(board).forEach(possibleMovePosition => {
             let possibleBoard = board.slice(0);
-            possibleBoard[possibleMove] = player;
+            possibleBoard[possibleMovePosition] = player;
+            let possibleMoveResults = this.minimax(possibleBoard, player == 'X' ? 'O' : 'X', depth + 1);
             moves.push({
-                position: possibleMove,
-                score: this.minimax(possibleBoard, player == 'X' ? 'O' : 'X').score
+                position: possibleMovePosition,
+                score: possibleMoveResults.score,
+                depth: possibleMoveResults.depth
             });
         });
         
@@ -52,11 +57,27 @@ export default class minimaxEngine {
     }
 
     getHighestScoringMove(moves) {
-        return moves.sort((a, b) => b.score - a.score)[0];
+        // First, find the highest score
+        let bestScore = moves.reduce((score, move) => { return move.score > score ? move.score : score }, -100);
+
+        // Then, filter out any score that is less than the best
+        let potentialMoves = moves.filter(move => move.score == bestScore);
+
+        // Now, we have an array with all of the best moves, but possible at varying depths. A larger depth indicates more moves to win.
+        // We want the fastest win, therefore we want the lowest depth
+        // move a depth = 6, move b depth = 4. We want b to be sorted to the first in the array
+        return potentialMoves.sort((a, b) => a.depth - b.depth)[0];
     }
 
     getLowestScoringMove(moves) {
-        return moves.sort((a, b) => a.score - b.score)[0];
+        // First, get the lowest score
+        let lowestScore = moves.reduce((score, move) => { return move.score < score ? move.score : score }, 100);
+
+        // Filter out any score that is higher than the best
+        let potentialMoves = moves.filter(move => move.score == lowestScore);
+
+        // Find the move with the highest depth
+        return potentialMoves.sort((a, b) => b.depth - a.depth)[0];
     }
 
     findPotentialMoves(board) {
