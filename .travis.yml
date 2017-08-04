@@ -9,6 +9,7 @@ deploy:
   secret_access_key:
     secure: SXemDd72GqaIx5i3tx4dsEF22+GqvqZht7LZCNOgunCpJD8Q7bRsn+EOfdpzLuyYDFrx50C+EpWe6hsDEKhqEgEbY2v6IuMnaYXxPILbprJHmqWU7DGVtTPnXMtYUN/YS+jOtK+KqcPY168rzomv8H2YqqFbAIxhvoibJH6oCOztEhCvIyZfTppGnd3DordbTz8SlM3IWsZTbAfC4O9hc/X6u66HC2jGBXDumsr8reANr0Ewry5bFz2GxPwvbyhGtvcDdRER+crfQ/s5+qXiMQHudAcvztgvpoJ8nHVzNgOSo3IlU4MOA2R7pvmBxYzyQFgT0T2H3apZ/4e9MAZ1VWRdrLzbBFtQ9yLwhHnw9Z32X8mkM3DCJHhKy6lDMSnTGwy5LK6LR+/+1YGKDaLfXZTqNhejWpjd/lU3OjcRoHeqTHl9CMJ0wy/zu0yBzt4+UnFGKkIvP1Q0o/zQgP1Ktg9PixYBA6v7vbqmsHhGZuncZODcP2aO4gFULZ/M0SmpHlMuiiXx+GmWT4bKHacSRTd2ITauvLft6pPoTRvCK5calXzPU1o9LA4hpi1/NxYH06reif7COXK1+3vHV/AB0yBOdCwodibqxm2K+i6H+91eEMJKyo6qfn6ZeQ3aoaxYQwiSw4tq4XecgP8MnwCPK34QcvzJV6q6WmPO0EDW8ok=
   bucket: zack-react-tic-tac-toe
+  skip_cleanup: true
   local-dir: dist
   acl: public_read
   on:
