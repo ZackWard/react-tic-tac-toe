@@ -5,9 +5,6 @@ script:
 - npm run build
 deploy:
   provider: s3
-  access_key_id: AKIAJEMQXFBWODIUGFWQ
-  secret_access_key:
-    secure: SXemDd72GqaIx5i3tx4dsEF22+GqvqZht7LZCNOgunCpJD8Q7bRsn+EOfdpzLuyYDFrx50C+EpWe6hsDEKhqEgEbY2v6IuMnaYXxPILbprJHmqWU7DGVtTPnXMtYUN/YS+jOtK+KqcPY168rzomv8H2YqqFbAIxhvoibJH6oCOztEhCvIyZfTppGnd3DordbTz8SlM3IWsZTbAfC4O9hc/X6u66HC2jGBXDumsr8reANr0Ewry5bFz2GxPwvbyhGtvcDdRER+crfQ/s5+qXiMQHudAcvztgvpoJ8nHVzNgOSo3IlU4MOA2R7pvmBxYzyQFgT0T2H3apZ/4e9MAZ1VWRdrLzbBFtQ9yLwhHnw9Z32X8mkM3DCJHhKy6lDMSnTGwy5LK6LR+/+1YGKDaLfXZTqNhejWpjd/lU3OjcRoHeqTHl9CMJ0wy/zu0yBzt4+UnFGKkIvP1Q0o/zQgP1Ktg9PixYBA6v7vbqmsHhGZuncZODcP2aO4gFULZ/M0SmpHlMuiiXx+GmWT4bKHacSRTd2ITauvLft6pPoTRvCK5calXzPU1o9LA4hpi1/NxYH06reif7COXK1+3vHV/AB0yBOdCwodibqxm2K+i6H+91eEMJKyo6qfn6ZeQ3aoaxYQwiSw4tq4XecgP8MnwCPK34QcvzJV6q6WmPO0EDW8ok=
   bucket: zack-react-tic-tac-toe
   skip_cleanup: true
   region: us-west-2
@@ -15,6 +12,3 @@ deploy:
   acl: public_read
   on:
     repo: ZackWard/react-tic-tac-toe
-env:
-  global:
-    secure: sXczm8AiE1T2rX7fCH5ojdV/Z5BxMyiF0wt+q3NLsy4bX3rzzVA8iOi4Shc/RFsGTcVrIWGyxro2zSOdC90dIwrgARVa6jRH2whiSE5n64phXpSRwXn3BjkjB7lRS0DaWd6xGf5fgMbGcA0dovPJIi846xKNG6VHrfes/espNABTZpKVFQ3uZA7S/VccybbVMK14PJdrvTaEDrWnlU2kOdwTo2q3juKS3hs6nVPum75T3iug3dPIAwfjcpPEDbdqTigSOfzgopfj+U+SZ+Ioh319sORyCKc/UWCdJEmDYVSXvSpXOn6lEObmNeXwEe7NgOlFm4F1sjQtq2gUwEdyNBbHzQKKsZGDtCrWPNLywjyhg7cSiR+VGk/jtyrgyDKzRlnCklCA8+Au4qsBT/6QkMHl9reo4jYTRlooWf0l4r2GCqwkkPyUPRE1cIzTtWb8h9cfDGphh8S/dSDZiKCV+4+2mb+RuvcY4DjuU1GRXwO/7JKl47NNswwEls74N5MHwf+RUvb1/MhBQArjU3Ex6YuYrWMoRwzteFpnKgG3osJWsA38Fq6NAr9Wn9zhSSKf2wQILznEPlk93l7AVSNS1e0Q8uWHlF/bVpcv906ZeFEHrgpf837C0M3v8XaTlTJFjC24wO+gJ+pgUuqZ6gBwbcxIZA/YJ8oxved1nj7Zamo=
