@@ -10,7 +10,7 @@ Migration of my tic-tac-toe game to React/Redux
 ### Day 2: Due 8/4/17 11:00am MT
 
 - [X] Replace algorithm with minimax
-- [ ] Implement feature to notify player of sub-par moves that they make (in a playful, humorous way) with a random quote.
+- [X] Implement feature to notify player of sub-par moves that they make (in a playful, humorous way) with ~~a random quote~~ something special.
 
 ### Day 3: (Extra Credit) Due 8/7/17 11:00am MT
 
