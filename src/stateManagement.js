@@ -35,9 +35,6 @@ const reducer = (state = defaultState, action) => {
             // Make a copy of the "present" board and push it into the past
             newState.game.past.push(JSON.parse(JSON.stringify(newState.game.present)));
 
-            // Debug:
-            console.log(newState);
-
             // Player move
             newState.game.present.board[action.playerMove] = state.playerMark;
 
@@ -58,14 +55,12 @@ const reducer = (state = defaultState, action) => {
             break;
 
         case "UNDO_MOVE": 
-            console.log("Trying to undo the move");
             // Move the present to the future, move the past to the present
             newState.game.future.unshift(newState.game.present);
             newState.game.present = newState.game.past.pop();
             break;
         
         case "REDO_MOVE":
-            console.log("Trying to redo the move!");
             // Move the present to the past, move the future to the present
             newState.game.past.push(newState.game.present);
             newState.game.present = newState.game.future.shift();

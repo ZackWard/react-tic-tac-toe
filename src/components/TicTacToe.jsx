@@ -19,7 +19,6 @@ export default class TicTacToe extends React.Component {
     }
 
     componentDidMount() {
-        console.log("Loaded, resetting board...");
         this.props.resetBoard();
     }
 

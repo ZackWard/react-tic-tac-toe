@@ -41,7 +41,6 @@ export const resetBoard = () => {
         fetch(url)
         .then(res => res.json())
         .then(jsonResponse => {
-            console.log(jsonResponse);
             dispatch({
                 type: "FINISH_FETCH_FAIL_NOTIFICATION_GIF",
                 source: jsonResponse.data.image_mp4_url
