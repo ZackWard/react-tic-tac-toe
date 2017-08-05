@@ -1,7 +1,7 @@
 # react-tic-tac-toe
 Migration of my tic-tac-toe game to React/Redux
 
-Live project is available at: [https://s3-us-west-2.amazonaws.com/zack-react-tic-tac-toe/index.html](https://s3-us-west-2.amazonaws.com/zack-react-tic-tac-toe/index.html)
+Live project is available at: [http://tictacreact.zackward.net](http://tictacreact.zackward.net)
 
 ## Specs
 
