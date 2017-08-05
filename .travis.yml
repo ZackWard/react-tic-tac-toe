@@ -4,7 +4,7 @@ node_js:
 script:
 - npm run build
 deploy:
-  orovider: s3
+  provider: s3
   access_key_id: $ACCESS_KEY_ID
   secret_access_key: $SECRET_ACCESS_KEY
   bucket: tictacreact.zackward.net
