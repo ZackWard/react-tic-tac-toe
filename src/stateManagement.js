@@ -5,6 +5,17 @@ import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 
 const defaultState = {
+    multiplayer: {
+        connected: false,
+        loggedIn: false,
+        username: null,
+        board: [null, null, null, null, null, null, null, null, null],
+        playing: false,
+        playerMark: "?",
+        turn: "X",
+        connectedPlayers: [],
+        invitations: []
+    },
     playerMark: "X",
     game: {
         past: [],
@@ -79,9 +90,41 @@ const reducer = (state = defaultState, action) => {
         case "BEGIN_FETCH_FAIL_NOTIFICATION_GIF": 
             newState.failNotification.loading = true;
             break;
-        case "FINISH_FETCH_FAIL_NOTIFICATION_GIF":
+        case "FINISH_FETCH_FAIL_NOTIFICATION_GIF": 
             newState.failNotification.loading = false;
             newState.failNotification.source = action.source;
+            break;
+        case "MULTIPLAYER_ESTABLISH_CONNECTION":
+            console.log("In reducer, handling establish connection");
+            newState.multiplayer.connected = true;
+            break;
+        case "MULTIPLAYER_LOGIN_SUCCESS":
+            console.log("In reducer, handling login");
+            newState.multiplayer.username = action.username;
+            newState.multiplayer.loggedIn = true;
+            break;
+        case "MULTIPLAYER_UPDATE_PLAYER_LIST":
+            console.log("In reducer, updating player list");
+            console.log(action.playerList);
+            newState.multiplayer.connectedPlayers = action.playerList;
+            break;
+        case "MULTIPLAYER_NEW_INVITATION":
+            console.log("In reducer, received a new invitation from " + action.from);
+            console.log(action);
+            newState.multiplayer.invitations.push(action.from);
+            break;
+        case "MULTIPLAYER_GAME_BEGIN":
+            console.log("Beginning game!");
+            // clear all invitations
+            newState.multiplayer.invitations = [];
+            newState.multiplayer.playing = true;
+            newState.multiplayer.playerMark = action.playerMark;
+            break;
+        case "MULTIPLAYER_BOARD_UPDATE":
+            console.log("In reducer, got board update!");
+            console.log(action.board);
+            newState.multiplayer.board = action.board;
+            break;
     }
 
     return newState;

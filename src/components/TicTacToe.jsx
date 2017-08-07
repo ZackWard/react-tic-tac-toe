@@ -2,6 +2,7 @@ import React from "react";
 
 import Nav from "./Nav.jsx";
 import DialogBox from "./DialogBox.jsx";
+import Multiplayer from "../containers/Multiplayer.js";
 import {FailNotification} from "./FailNotification.jsx";
 import TTTCell from "./TTTCell.jsx";
 
@@ -30,13 +31,18 @@ export default class TicTacToe extends React.Component {
             resetButtonText = "Try again?";
         }
 
+        let boardStyle = {};
+        if (this.props.multiplayer) {
+            boardStyle.display = "none";
+        }
+
         return (
             <div>
                 { ! this.props.failGifLoading && <FailNotification player={this.props.playerMark} winner={this.props.winner} failGif={this.props.failGif} /> }
                 <Nav />
                 <DialogBox chooseMark={this.props.changePlayerMark}/>
                 <div className="board">
-                    <table>
+                    <table style={boardStyle}>
                         <tbody>
                             <tr>
                                 <TTTCell winningSpaces={this.props.winningSpaces} position={0} mark={this.props.board[0]} clickHandler={this.clickCell} />
@@ -55,13 +61,14 @@ export default class TicTacToe extends React.Component {
                             </tr>
                         </tbody>
                     </table>
-                    <div id="options">
+                    <div id="options" style={boardStyle}>
                         <button disabled={! this.props.undoAvailable } onClick={this.props.undoMove} className="btn btn-default">Undo</button>
                         <button onClick={this.props.resetBoard} className="btn btn-default">{resetButtonText}</button>
                         <button disabled={! this.props.redoAvailable } onClick={this.props.redoMove} className="btn btn-default">Redo</button>
                         <br />
                         <button className="btn btn-default" data-toggle="modal" data-target="#dialog">Options</button>
                     </div>
+                    <Multiplayer />
                 </div>
             </div>
         );

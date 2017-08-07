@@ -15,7 +15,7 @@ const TTTCell = (props) => {
     }
 
     return (
-        <td className={classList} onClick={() => {props.clickHandler(props.position)}}>{markup}</td>
+        <td className={classList} onClick={() => {props.clickHandler(props.position);}}>{markup}</td>
     );
 };
 

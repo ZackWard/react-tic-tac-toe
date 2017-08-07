@@ -1,6 +1,7 @@
 import {connect} from "react-redux";
 import TicTacToe from "../components/TicTacToe.jsx";
 import {handlePlayerMove, changePlayerMark, undoMove, redoMove, resetBoard} from "../actionCreators.js";
+import {doMultiplayerMove} from "../multiplayerActionCreators.js";
 
 const mapStateToProps = (state) => {
     return {
@@ -11,7 +12,8 @@ const mapStateToProps = (state) => {
         failGifLoading: state.failNotification.loading,
         failGif: state.failNotification.source,
         undoAvailable: state.game.past.length > 0,
-        redoAvailable: state.game.future.length > 0
+        redoAvailable: state.game.future.length > 0,
+        multiplayer: state.multiplayer.playing
     };
 };
 
@@ -24,6 +26,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         makePlay: (position, player) => {
             dispatch(handlePlayerMove(position, player));
+        },
+        doMultiplayerMove: (position) => {
+            dispatch(doMultiplayerMove)
         },
         resetBoard: () => {
             dispatch(resetBoard());
